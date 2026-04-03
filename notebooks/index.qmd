@@ -8,6 +8,4 @@ title: "Learning Parameters of Dynamical Systems"
 
 ### 2. [Intro to MCMC and Inference for State Space Models](MCMC.ipynb)
 
-# Advanced Examples
 
-### 1. [Visual of Hamiltonian Monte Carlo for 1-D Distributions](HMC_ANI.ipynb)
