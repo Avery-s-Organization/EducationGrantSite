@@ -7,3 +7,7 @@ title: "Learning Parameters of Dynamical Systems"
 ### 1. [Intro to SIR models and Euler's Method](example_SIR.ipynb)
 
 ### 2. [Intro to MCMC and Inference for State Space Models](MCMC.ipynb)
+
+# Advanced Examples
+
+### 1. [Visual of Hamiltonian Monte Carlo for 1-D Distributions](HMC_ANI.ipynb)
