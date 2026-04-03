@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.26">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>The SIR Model – Education Test Site</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../">
+<script src="../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="../site_libs/quarto-html/popper.min.js"></script>
+<script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-587c61ba64f3a5504c4d52d930310e48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../site_libs/bootstrap/bootstrap-0402472ef2aa6c6f2519e244e15adf99.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../index.html">
+    <span class="navbar-title">Education Test Site</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../notebooks/index.html"> 
+<span class="menu-text">Demo Notebooks</span></a>
+  </li>  
+</ul>
+            <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/NAU-CCL/Epymorph"> <i class="bi bi-github" role="img" aria-label="GitHub">
+</i> 
+<span class="menu-text"></span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#solutions-to-the-sir-model" id="toc-solutions-to-the-sir-model" class="nav-link active" data-scroll-target="#solutions-to-the-sir-model">Solutions to the SIR Model</a>
+  <ul class="collapse">
+  <li><a href="#numerical-solutions" id="toc-numerical-solutions" class="nav-link" data-scroll-target="#numerical-solutions">Numerical Solutions</a></li>
+  </ul></li>
+  <li><a href="#coding-the-numerical-solution-in-jax" id="toc-coding-the-numerical-solution-in-jax" class="nav-link" data-scroll-target="#coding-the-numerical-solution-in-jax">Coding the Numerical Solution in JAX</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#inverse-problems" id="toc-inverse-problems" class="nav-link" data-scroll-target="#inverse-problems">Inverse Problems</a>
+  <ul class="collapse">
+  <li><a href="#example" id="toc-example" class="nav-link" data-scroll-target="#example">Example</a></li>
+  <li><a href="#the-likelihood-function" id="toc-the-likelihood-function" class="nav-link" data-scroll-target="#the-likelihood-function">The Likelihood Function</a></li>
+  <li><a href="#finding-the-maximum-likelihood-estimate-of-theta" id="toc-finding-the-maximum-likelihood-estimate-of-theta" class="nav-link" data-scroll-target="#finding-the-maximum-likelihood-estimate-of-theta">Finding the Maximum Likelihood Estimate of <span class="math inline">\(\theta\)</span></a></li>
+  <li><a href="#gradient-based-optimization" id="toc-gradient-based-optimization" class="nav-link" data-scroll-target="#gradient-based-optimization">Gradient based Optimization</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">The SIR Model</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="cc58602e" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Our goal will be simulation on the SIR model, a system of three nonlinear differential equations describing disease spread. The system looks as follows:</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{dS}{dt} &amp;= -\frac{\beta S I}{N} \\
+\frac{dI}{dt} &amp;= \frac{\beta S I}{N} - \gamma I \\
+\frac{dR}{dt} &amp;= \gamma I
+\end{aligned}
+\]</span></p>
+<p>with initial conditions <span class="math inline">\(S(0) = S_{0}\)</span>, <span class="math inline">\(I(0) = I_0\)</span> and <span class="math inline">\(R_{0} = R_{0}\)</span> and <span class="math inline">\(N = S(t) + I(t) + R(t) = S_{0} + I_{0} + R_{0} = \text{constant}\)</span>. This system describes the the spread of an infectious disease by dividing the population into three groups, Susceptibles <span class="math inline">\(S(t)\)</span>, Infectious <span class="math inline">\(I(t)\)</span>, and Recovered <span class="math inline">\(R(t)\)</span>. A key assumption of this model is that once a personal transitions from infected to recovered they can no longer become susceptible to disease again.</p>
+<p>The SIR model has two constant parameters, <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\gamma\)</span>. These parameters do not vary with time and are fixed for the duration of the time interval of the solution. The parameter <span class="math inline">\(\gamma\)</span> is the recovery rate, with units of <span class="math inline">\(\frac{1}{\text{days}}\)</span>. For instance <span class="math inline">\(\gamma = 0.2\)</span> would indicate a average duration of illness of <span class="math inline">\(5\)</span> days. <span class="math inline">\(\beta\)</span> is the transmission rate, controlling the average number of people infected by one infected person per unit time.</p>
+<section id="solutions-to-the-sir-model" class="level2">
+<h2 class="anchored" data-anchor-id="solutions-to-the-sir-model">Solutions to the SIR Model</h2>
+<p>Given a known <span class="math inline">\(\beta,\gamma, S_0, I_0\)</span>, and <span class="math inline">\(R_0\)</span> we would like to find a solution to the SIR model, <span class="math inline">\(S(t), I(t)\)</span>, and <span class="math inline">\(R(t)\)</span> so we can observe how many people are infected, susceptible, and recovered over the course of time. Unfortunately this system of differential equations admits no closed form expression, there is no way derive <span class="math inline">\(S(t),I(t)\)</span>, and <span class="math inline">\(R(t)\)</span> algebraically.</p>
+<section id="numerical-solutions" class="level3">
+<h3 class="anchored" data-anchor-id="numerical-solutions">Numerical Solutions</h3>
+<p>We instead turn to numerical solutions, the process of approximating solutions to the differential equations using computers. The simplest numerical method for approximating solutions to differential equations is Euler’s method. In Euler’s method we approximate the derivative using finite differences and derive an update formula as follows.</p>
+<p>First, we will use the compact notation <span class="math inline">\(X(t) = [S(t),I(t),R(t)]^T\)</span> and therefore <span class="math inline">\(\frac{dX}{dt} = f(X(t))\)</span> where <span class="math inline">\(f = [-\frac{\beta S I}{N},\frac{\beta S I}{N} - \gamma I,\gamma I]^T\)</span>. Then we use the approximation</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{dX}{dt} \approx \frac{X(t+\Delta t) - X(t)}{\Delta t}
+\end{aligned}
+\]</span></p>
+<p>where we have substituted the concrete time step <span class="math inline">\(\Delta t\)</span> for the infinitesimal time step <span class="math inline">\(dt\)</span>. The value of <span class="math inline">\(\Delta t\)</span> controls the error of the approximation. Our finite difference derivative then becomes</p>
+<p><span class="math display">\[
+\begin{aligned}
+\frac{X(t+\Delta t) - X(t)}{\Delta t} = f(X(t)).
+\end{aligned}
+\]</span>.</p>
+<p>We can solve this expression for <span class="math inline">\(X(t + \Delta t)\)</span> to obtain an update formula</p>
+<p><span class="math display">\[
+\begin{aligned}
+X(t + \Delta t) = X(t) + \Delta t \cdot f(X(t))
+\end{aligned}
+\]</span>.</p>
+<p>This formula gives us a recursion relation by which we can obtain an approximate solution to <span class="math inline">\(X(t)\)</span> on a grid of time points <span class="math inline">\([0,\Delta t, 2\Delta t, \dots]\)</span> given a starting point <span class="math inline">\(X(t_0)\)</span>.</p>
+</section>
+</section>
+<section id="coding-the-numerical-solution-in-jax" class="level2">
+<h2 class="anchored" data-anchor-id="coding-the-numerical-solution-in-jax">Coding the Numerical Solution in JAX</h2>
+<p>This section will describe how to program the numerical solution to the differential equation in the auto-differentiation python package JAX. We will first define a function <code>EulerStepper</code> that implements a single step of the Euler recursion relation. The fields will be the time step <span class="math inline">\(\Delta t\)</span> denoted <code>delta_t</code> in the code, the function <span class="math inline">\(f(X(t))\)</span>, and any parameters, in our case <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\gamma\)</span> in the vector <code>par</code>.</p>
+<div id="8aeb502d" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> EulerStepper(x_prev,delta_t<span class="op">=</span><span class="fl">0.01</span>,<span class="op">*</span>, par <span class="op">=</span> <span class="va">None</span>, func):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>        x_next <span class="op">=</span> x_prev <span class="op">+</span> delta_t <span class="op">*</span> func(x_prev,par)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x_next</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="bc3b645d" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>step <span class="op">=</span> EulerStepper(<span class="fl">0.1</span>,delta_t <span class="op">=</span> <span class="fl">0.1</span>,par <span class="op">=</span> (<span class="fl">0.1</span>),func <span class="op">=</span> <span class="kw">lambda</span> x,par:<span class="op">-</span>par <span class="op">*</span> x)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(step)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>0.099</code></pre>
+</div>
+</div>
+<p>advances an Euler approximation to the differential equation <span class="math inline">\(\frac{dX}{dt} = -kX\)</span> by one time step <code>delta_t</code> starting at <span class="math inline">\(0.1\)</span>.</p>
+<p>The Euler approximation to our SIR model solution can be easily implemented using a for loop, which we have encapsulated in the function <code>solver</code>.</p>
+<div id="29764824" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>steps <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>delta_t <span class="op">=</span> <span class="fl">0.1</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>par <span class="op">=</span> jnp.array([<span class="fl">0.3</span>,<span class="fl">0.1</span>]) <span class="co">#beta,gamma</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>X0 <span class="op">=</span> jnp.array([<span class="fl">100.0</span>,<span class="fl">1.0</span>,<span class="fl">0.0</span>]) <span class="co">#S_0,I_0,R_0</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> SIR_func(X,par): </span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    beta,gamma <span class="op">=</span> par <span class="co">#Unpack parameter tuple</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    S,I,R <span class="op">=</span> X <span class="co">#Unpack input array </span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    N <span class="op">=</span> S<span class="op">+</span>I<span class="op">+</span>R <span class="co">#Total population</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Derivatives ##</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    dS <span class="op">=</span> <span class="op">-</span>beta<span class="op">/</span>N <span class="op">*</span> S <span class="op">*</span> I</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    dI <span class="op">=</span> beta<span class="op">/</span>N <span class="op">*</span> S <span class="op">*</span> I <span class="op">-</span> gamma <span class="op">*</span> I</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    dR <span class="op">=</span> gamma <span class="op">*</span> I</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.array([dS,dI,dR])</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> solver(delta_t,X0,par,func,steps):</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    beta,gamma <span class="op">=</span> par</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> jnp.zeros((steps,X0.shape[<span class="dv">0</span>])) <span class="co">#Array to hold solution values</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> X.at[<span class="dv">0</span>,:].<span class="bu">set</span>(X0) <span class="co">#JAX arrays must be set this way, numpy syntax will not work.</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">## Euler solution loop ##</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> step <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>,steps): </span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        X_next <span class="op">=</span> EulerStepper(X[step<span class="op">-</span><span class="dv">1</span>,:],delta_t <span class="op">=</span> delta_t, par <span class="op">=</span> (beta,gamma), func <span class="op">=</span> func)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>        X <span class="op">=</span> X.at[step,:].<span class="bu">set</span>(X_next)</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> X</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>X_euler <span class="op">=</span> solver(delta_t,X0,par,SIR_func,steps)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>We can now plot the solution using the plotting package matplotlib. For the SIR model, the Euler method actually provides a pretty good approximation to the solution!</p>
+<div id="e669dbc4" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>labels <span class="op">=</span> [<span class="st">'S'</span>,<span class="st">'I'</span>,<span class="st">'R'</span>]</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>t_range <span class="op">=</span> jnp.arange(<span class="dv">0</span>,steps <span class="op">*</span> delta_t,delta_t)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Plot of the Numerical Solution of the SIR model'</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(X0.shape[<span class="dv">0</span>]): </span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    plt.plot(t_range,X_euler[:,i],label <span class="op">=</span> labels[i])</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Time in Days'</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="example_SIR_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="exercises" class="level2">
+<h2 class="anchored" data-anchor-id="exercises">Exercises</h2>
+<p>Evaluate the effect of changing <code>delta_t</code> on the solution. In particular, choose different values of <code>delta_t</code> and graph the resultant <span class="math inline">\(I(t)\)</span> curve for each <code>delta_t</code> on the same plot.</p>
+<p>Evaluate the effect of changing <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\gamma\)</span>. Plot the results of keeping <code>gamma</code> fixed and changing <code>beta</code> and the results of keeping <code>beta</code> fixed and changing <code>gamma</code>. What happens if <span class="math inline">\(\gamma &gt; \beta\)</span>?</p>
+</section>
+<section id="inverse-problems" class="level2">
+<h2 class="anchored" data-anchor-id="inverse-problems">Inverse Problems</h2>
+<p>In the previous section, we solved what is called the forward problem. Given initial conditions <span class="math inline">\(S_{0},I_{0}\)</span>, and <span class="math inline">\(R_{0}\)</span> and parameters <span class="math inline">\(\beta = 0.3\)</span> and <span class="math inline">\(\gamma = 0.1\)</span> we found the approximate solution to <span class="math inline">\(S(t),I(t)\)</span>, and <span class="math inline">\(R(t)\)</span>. However it is common in real world scenarios that we actually know the infection curve <span class="math inline">\(I(t)\)</span> or at least have a noisy estimate. Agencies such as the CDC publish the reported cases(or hospitalizations) which we can use for analysis.</p>
+<p>The inverse problem then becomes the following. Given an estimate of the infection curve <span class="math inline">\(\{y_1,y_2,\dots,y_T\}\)</span> what are the most likely values of <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\gamma\)</span> to have produced this curve? Our data is usually given daily or weekly for disease, so <span class="math inline">\(T\)</span> is the last day or week of data.</p>
+<section id="example" class="level3">
+<h3 class="anchored" data-anchor-id="example">Example</h3>
+<p>For our example lets take the solution of the SIR model we produced in the last example, extract the <span class="math inline">\(I(t)\)</span> curve and add some noise to simulate real data.</p>
+<div id="a3456eb1" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">## We extract the I compartment value at daily intervals to simulate our daily data. 1/delta_t is the number of delta_t intervals in one day. </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>I <span class="op">=</span> X_euler[:,<span class="dv">1</span>]</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>day_interval <span class="op">=</span> <span class="bu">int</span>(<span class="dv">1</span><span class="op">/</span>delta_t)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> I[::day_interval] <span class="co">## Extracts every day_interval element from I</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>day_range <span class="op">=</span> jnp.arange(<span class="fl">0.</span>,steps<span class="op">//</span>day_interval,<span class="fl">1.</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Data without Noise'</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>plt.scatter(day_range,data,marker <span class="op">=</span> <span class="st">'x'</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Days '</span>)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="example_SIR_files/figure-html/cell-7-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Now lets add some noise. We will add Poisson distributed noise here which satisfies some nice assumptions.</p>
+<ol type="1">
+<li>The data is integer valued. (No fractional infection is reported, doesn’t make sense!)</li>
+<li>The data is always greater than zero. (No negative infections.)</li>
+<li>The noise for each data point is uncorrelated.</li>
+</ol>
+<p>We will use JAX’s syntax for generating random numbers. This is slightly different from traditional stateful PRNG and worth reading about on the JAX website. I’ll mention the basics.</p>
+<div id="fd53a970" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">'''JAX PRNG keys are generated using this function, a seed can be provided for reproducibility. </span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co">You can choose the method for generating pseudo-random numbers but for our use case the default will suffice. '''</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>rng_key <span class="op">=</span> jax.random.key(<span class="dv">0</span>) </span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">'''To generate random numbers we feed the key into a jax.random function.'''</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>num <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>rand_nums <span class="op">=</span> jax.random.uniform(rng_key,minval <span class="op">=</span> <span class="fl">0.</span>,maxval <span class="op">=</span> <span class="fl">1.</span>,shape <span class="op">=</span> (num,))</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rand_nums,<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co">'''We have generated an array of 10 uniform random number between 0 and 1.</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co">Let's try to generate a second array.'''</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>rand_nums2 <span class="op">=</span> jax.random.uniform(rng_key,minval <span class="op">=</span> <span class="fl">0.</span>,maxval <span class="op">=</span> <span class="fl">1.</span>, shape <span class="op">=</span> (num,))</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rand_nums2)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="co">'''The same array!'''</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.947667   0.9785799  0.33229148 0.46866846 0.5698887  0.16550303
+ 0.3101946  0.68948054 0.74676657 0.17101455] 
+
+[0.947667   0.9785799  0.33229148 0.46866846 0.5698887  0.16550303
+ 0.3101946  0.68948054 0.74676657 0.17101455]</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>'The same array!'</code></pre>
+</div>
+</div>
+<p>In JAX, the state of the random number generator corresponding to a key is not updated as in NumPy. A JAX key will give you the same sequence of numbers every single time you call it, which is oftentimes not what you want.</p>
+<p>In JAX a key should be used only once in a <code>jax.random</code> function and then discarded. We instead generate new keys based on the value of the old key to maintain reproducibility.</p>
+<div id="e2dad136" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>rng_key <span class="op">=</span> jax.random.key(<span class="dv">5</span>) </span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">'''Split the key, get two new keys. One will be our global key for future splitting, the other the key to use for generation.'''</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>rng_key,rand_key <span class="op">=</span> jax.random.split(rng_key)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>num <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>rand_nums <span class="op">=</span> jax.random.uniform(rand_key,minval <span class="op">=</span> <span class="fl">0.</span>,maxval <span class="op">=</span> <span class="fl">1.</span>,shape <span class="op">=</span> (num,))</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rand_nums,<span class="st">"</span><span class="ch">\n</span><span class="st">"</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> rand_key <span class="co">#Just to indicate we don't want to use this key again. You don't need to delete it!</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>rng_key,rand2_key <span class="op">=</span> jax.random.split(rng_key)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>rand_nums2 <span class="op">=</span> jax.random.uniform(rand2_key,minval <span class="op">=</span> <span class="fl">0.</span>,maxval <span class="op">=</span> <span class="fl">1.</span>, shape <span class="op">=</span> (num,))</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> rand2_key</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(rand_nums2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0.08381331 0.22921324 0.11234713 0.2685336  0.12162471 0.45548236
+ 0.53602886 0.47860444 0.16304624 0.07066178] 
+
+[0.082425   0.5812527  0.8699739  0.23379648 0.8386893  0.06594062
+ 0.4907614  0.07678306 0.31049514 0.2610916 ]</code></pre>
+</div>
+</div>
+<p>Now we have two arrays of random numbers just as we wanted. The rule of thumb to follow is once you use the JAX key, discard it. Never use it to generate random numbers again!</p>
+<p>Now, adding noise to our data.</p>
+<div id="ea89be85" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>rng_key,noise_key <span class="op">=</span> jax.random.split(rng_key)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> jax.random.poisson(noise_key,data)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="kw">del</span> noise_key</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Data with Noise'</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>plt.scatter(day_range,data,marker <span class="op">=</span> <span class="st">'x'</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Days '</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="example_SIR_files/figure-html/cell-10-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>Good, now our data is noisy and reflective of real world data with reporting errors and random anomalies.</p>
+</section>
+<section id="the-likelihood-function" class="level3">
+<h3 class="anchored" data-anchor-id="the-likelihood-function">The Likelihood Function</h3>
+<p>The next question to address is how to relate the observed data to the model. We construct a likelihood function based on our assumptions about the data.</p>
+<p>Assume our data <span class="math inline">\(y_{t}\)</span> is Poisson distributed with mean equal to the true value <span class="math inline">\(I(t)\)</span> and note that <span class="math inline">\(I(t)\)</span> depends on our choice of parameters <span class="math inline">\(\beta\)</span> and <span class="math inline">\(\gamma\)</span>. We will write <span class="math inline">\(\theta = [\beta, \gamma]^T\)</span> and note the dependence of <span class="math inline">\(I(t)\)</span> on <span class="math inline">\(\theta\)</span> by <span class="math inline">\(I_{\theta}(t)\)</span>. Now for each data point <span class="math display">\[
+Y_{t} \sim f(\cdot|I_{\theta}(t))
+\]</span></p>
+<p>where <span class="math inline">\(f(X|I_{\theta}(t))\)</span> is a Poisson distribution with mean <span class="math inline">\(I_{\theta}(t)\)</span>. So <span class="math inline">\(Y_{t}\)</span> is a random variable with distribution</p>
+<p><span class="math display">\[
+P(Y_{t} = y_{t}) = f(y_{t}|I_{\theta}(t)) = \frac{(I_{\theta}(t))^{y_t} e^{-(I_{\theta}(t))}}{y_{t}!}.
+\]</span> The probability <span class="math inline">\(Y_{t}\)</span> takes on the value <span class="math inline">\(y_{t}\)</span> is given by the above expression. This probability mass function is implemented simply in <code>jax.scipy.stats</code> as <code>poisson</code>.</p>
+<p>We now make one last assumption. We assume each observation is independent, that considering other observations does not change the probability of <span class="math inline">\(Y_t\)</span>. This can be expressed in the following way <span class="math display">\[
+P(Y_t = y_t,Y_{k} = y_{k}) = P(Y_t = y_{t})P(Y_{k} = y_{k}), k \neq t
+\]</span>.</p>
+<p>This means that we can nicely formulate our full likelihood function as</p>
+<p><span class="math display">\[
+L(\theta) = P(Y_{0:T} = y_{0:T}) = \prod\limits_{t=0}^{T} f(y_{t}|I_{\theta}(t))
+\]</span></p>
+<p>where <span class="math inline">\(Y_{0:T}\)</span> is notation meaning <span class="math inline">\(Y_{0},Y_{1},\dots,Y_{T}\)</span>. The meaning of this function is that the probability we see <span class="math inline">\(Y_{0} = y_{0}\)</span> and <span class="math inline">\(Y_{1} = y_{1}\)</span> and <span class="math inline">\(\dots\)</span> and <span class="math inline">\(Y_{T} = y_{T}\)</span> is equal to the expression on the right.</p>
+<p>One final note, we introduce the notation <span class="math inline">\(L(\theta)\)</span> to indicate that the solution to <span class="math inline">\(I_{\theta}(t)\)</span> and thus <span class="math inline">\(P(Y_{0:T} = y_{0:T})\)</span> can be thought of as a function of <span class="math inline">\(\theta\)</span>.</p>
+<p>Our goal is now more clear. We want to find the value of <span class="math inline">\(\theta\)</span> that maximizes <span class="math inline">\(L(\theta)\)</span>. If <span class="math inline">\(L(\theta)\)</span> is maximized this corresponds to maximizing the probability that our data occurs given <span class="math inline">\(\theta\)</span>. This is called the maximum likelihood estimate(MLE) of <span class="math inline">\(\theta\)</span> which we will denote <span class="math inline">\(\theta^{*}\)</span>.</p>
+</section>
+<section id="finding-the-maximum-likelihood-estimate-of-theta" class="level3">
+<h3 class="anchored" data-anchor-id="finding-the-maximum-likelihood-estimate-of-theta">Finding the Maximum Likelihood Estimate of <span class="math inline">\(\theta\)</span></h3>
+<p>Before continuing we will use a trick to simplify computation. We take the log of <span class="math inline">\(L(\theta)\)</span> which we denote <span class="math inline">\(\mathcal{L}(\theta)\)</span>. The properties of the logarithm allow us to simplify our expression and the fact that <span class="math inline">\(\log\)</span> is monotonic means the maximum of <span class="math inline">\(L(\theta)\)</span> is equal to the maximum of <span class="math inline">\(\mathcal{L}(\theta)\)</span>. This step is important because each element in the product in <span class="math inline">\(L(\theta)\)</span> is between <span class="math inline">\(0\)</span> and <span class="math inline">\(1\)</span>. The product of many small numbers becomes very small, sometimes too small for the computer to represent! So this trick alleviates that issue.</p>
+<p><span class="math display">\[
+\mathcal{L}(\theta)  = \log(L(\theta)) = \log\left(\prod\limits_{t=0}^{T} f(y_{t}|I_{\theta}(t))\right) \\
+                     = \sum\limits_{t=0}^{T} \log(f(y_{t}|I_{\theta}(t)))
+\]</span></p>
+<p>Now we work exclusively with <span class="math inline">\(\mathcal{L}(\theta)\)</span>. Because <span class="math inline">\(\mathcal{L}(\theta)\)</span> has a two dimensional range we can actually plot it.</p>
+<div id="fa849d4d" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">##First lets define our log-likelihood function </span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="at">@jax.jit</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_likelihood(theta): </span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    day_interval <span class="op">=</span> <span class="bu">int</span>(<span class="dv">1</span><span class="op">/</span>delta_t)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> solver(delta_t <span class="op">=</span> delta_t,par <span class="op">=</span> theta,X0 <span class="op">=</span> X0, func <span class="op">=</span> SIR_func,steps <span class="op">=</span> steps) <span class="co">#Solve the system with the given theta</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    I <span class="op">=</span> X[::day_interval,<span class="dv">1</span>]</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    I <span class="op">=</span> jnp.clip(I, <span class="fl">1e-8</span>, <span class="va">None</span>) <span class="co">#Clip just in case I dips below zero</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.<span class="bu">sum</span>(jax.scipy.stats.poisson.logpmf(k <span class="op">=</span> data, mu <span class="op">=</span> I))</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Log likelihood test: </span><span class="sc">{</span>log_likelihood(jnp.array([<span class="fl">0.1</span>,<span class="fl">0.1</span>]))<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Log likelihood test: -2082.894775390625</code></pre>
+</div>
+</div>
+<div id="89a6dcfa" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>betas <span class="op">=</span> jnp.arange(<span class="dv">0</span>,<span class="fl">0.5</span>,<span class="fl">0.01</span>) <span class="co">#Grid for betas</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>gammas <span class="op">=</span> jnp.arange(<span class="dv">0</span>,<span class="fl">0.5</span>,<span class="fl">0.01</span>) <span class="co">#Grid for gammas</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>LL <span class="op">=</span> jnp.zeros((<span class="bu">len</span>(betas), <span class="bu">len</span>(gammas))) <span class="co">#Array to store log-likelihood values</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">## Iterate over every (beta,gamma) pair and evaluate log-likelihood </span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i, beta <span class="kw">in</span> <span class="bu">enumerate</span>(betas):</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> j, gamma <span class="kw">in</span> <span class="bu">enumerate</span>(gammas):</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        theta <span class="op">=</span> jnp.array([beta, gamma])</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        LL <span class="op">=</span> LL.at[i, j].<span class="bu">set</span>(log_likelihood(theta))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="e99a7ff2" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Find the argmaximum in the grid</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>idx <span class="op">=</span> jnp.argmax(LL)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>i, j <span class="op">=</span> jnp.unravel_index(idx, LL.shape)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>beta_star  <span class="op">=</span> betas[i]</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>gamma_star <span class="op">=</span> gammas[j]</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>max_LL <span class="op">=</span> LL[i, j]</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"beta* ="</span>, beta_star)</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"gamma* ="</span>, gamma_star)</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"max log-likelihood ="</span>, max_LL)</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co">## Plotting the log-likelihood as the heatmap</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>X,Y <span class="op">=</span> jnp.meshgrid(betas,gammas)</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">6</span>))</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>cp <span class="op">=</span> plt.contourf(X, Y, LL.T, levels<span class="op">=</span><span class="dv">1000</span>,cmap <span class="op">=</span> <span class="st">'inferno'</span>)</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>plt.colorbar(cp, label<span class="op">=</span><span class="st">'Log-Likelihood'</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>plt.scatter(beta_star,gamma_star,marker <span class="op">=</span> <span class="st">'X'</span>,label <span class="op">=</span> <span class="st">'MLE'</span>)</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"beta"</span>)</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"gamma"</span>)</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Log-Likelihood Contour Plot"</span>)</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>beta* = 0.29999998
+gamma* = 0.099999994
+max log-likelihood = -206.35555</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="example_SIR_files/figure-html/cell-13-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="2b575e03" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> Axes3D </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>fig <span class="op">=</span> plt.figure()</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>ax <span class="op">=</span> fig.add_subplot(<span class="dv">111</span>, projection<span class="op">=</span><span class="st">'3d'</span>)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>ax.set_xlabel(<span class="st">'gamma'</span>)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>ax.set_ylabel(<span class="st">'beta'</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>ax.set_zlabel(<span class="st">'Log-Likelihood'</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>ax.plot_surface(X,Y,LL.T,cmap <span class="op">=</span> <span class="st">'inferno'</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>fig.tight_layout()</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="example_SIR_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>From the heatmap we see the MLE is exactly at the value of the parameters we used when generating the data! So we have succeeded in our estimation task, right? Well yes and no. In most problems of interest there are many more parameters and performing a grid search prohibitively expensive.</p>
+<p>Exercises:</p>
+<ol type="1">
+<li><p>Try other likelihood functions than Poisson. In particular, try Gaussian and Negative Binomial distributions and see how the geometry of the likelihood surface changes. Keep in mind that the Gaussian distribution has an another parameter <span class="math inline">\(\sigma\)</span>, the standard deviation. Similarly, the Negative Binomial distribution has an addition parameter <span class="math inline">\(\R\)</span>, the so called overdispersion when parameterized in terms of its mean.</p></li>
+<li><p>Change the amount of data and examine how the likelihood function changes, maintaining the Poisson assumption. For example, change the data resolution to weekly or decrease the number of days of data collection.</p></li>
+</ol>
+</section>
+<section id="gradient-based-optimization" class="level3">
+<h3 class="anchored" data-anchor-id="gradient-based-optimization">Gradient based Optimization</h3>
+<p>As <span class="math inline">\(\mathcal{L}(\theta)\)</span> is nice and differentiable we can find <span class="math inline">\(\theta^{*}\)</span> as the solution to the following equation</p>
+<p><span class="math display">\[
+\nabla \mathcal{L}(\theta) = \bar{0}
+\]</span></p>
+<p>solving for <span class="math inline">\(\theta\)</span>. The gradient is taken with respect to <span class="math inline">\(\theta\)</span>, so <span class="math inline">\(\nabla \mathcal{L}(\theta) = [\frac{\partial \mathcal{L}}{\partial \beta},\frac{\partial \mathcal{L}}{\partial \gamma}]\)</span> and <span class="math inline">\(\bar{0} = [0,0]^T\)</span>. This is typically done iteratively, taking a small step along the gradient vector and evaluating <span class="math inline">\(\mathcal{L}(\theta)\)</span> at the new point. We then continue until a suitable convergence criteria is reached.</p>
+<p>To utilize gradient based optimization, we need to make a modification to our function <code>solver</code> which we are using to solve the SIR model numerically. The autodifferentiation compute graph in JAX has a hard time computing stable gradients through long loops. So we will switch our solver to an external library <code>diffrax</code> which implements highly sophisticated ODE solvers and through which stable gradients can be computed.</p>
+<div id="fa9e4e32" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> diffrax <span class="im">import</span> diffeqsolve, Dopri5, ODETerm, SaveAt</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> diffrax_solver(delta_t,X0,par,func,steps):</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    term <span class="op">=</span> ODETerm(<span class="kw">lambda</span> t,X,par: func(X,par))</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    solver <span class="op">=</span> Dopri5()</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    times <span class="op">=</span> jnp.arange(<span class="dv">0</span>,<span class="bu">int</span>(steps <span class="op">*</span> delta_t),<span class="fl">1.</span>)</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    saveat <span class="op">=</span> SaveAt(ts <span class="op">=</span> times)</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    sol <span class="op">=</span> diffeqsolve(terms <span class="op">=</span> term,solver <span class="op">=</span> solver,t0 <span class="op">=</span> times[<span class="dv">0</span>],t1 <span class="op">=</span> times[<span class="op">-</span><span class="dv">1</span>],dt0 <span class="op">=</span> delta_t,y0 <span class="op">=</span> X0, args <span class="op">=</span> par,saveat <span class="op">=</span> saveat)</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> sol.ys </span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a><span class="co">### Using our updated solver</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>X_new <span class="op">=</span> diffrax_solver(delta_t,X0,par,SIR_func,steps)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co">##Now lets redefine our likelihood function with the new solver. </span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> log_likelihood(theta): </span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>    delta_t <span class="op">=</span> <span class="fl">0.1</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>    X <span class="op">=</span> diffrax_solver(delta_t <span class="op">=</span> delta_t,par <span class="op">=</span> jnp.exp(theta),X0 <span class="op">=</span> X0, func <span class="op">=</span> SIR_func,steps <span class="op">=</span> steps) <span class="co">#Solve the system with the given theta</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>    I <span class="op">=</span> X[:,<span class="dv">1</span>] <span class="co">#We don't need the sampling step anymore. We told diffrax to save only at daily intervals.</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>    I <span class="op">=</span> jnp.clip(I, <span class="fl">1e-8</span>, <span class="va">None</span>) <span class="co">#Clip just in case I dips below zero</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jnp.<span class="bu">sum</span>(jax.scipy.stats.poisson.logpmf(k <span class="op">=</span> data, mu <span class="op">=</span> I))</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Log likelihood test: </span><span class="sc">{</span>log_likelihood(jnp.array([<span class="fl">0.1</span>,<span class="fl">0.1</span>]))<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Log likelihood test: -5397.85888671875</code></pre>
+</div>
+</div>
+<p>Now we can easily use <code>JAX</code> to obtain the gradient of our log-likelihood <span class="math inline">\(\mathcal{L}(\theta)\)</span>. Note we also utilize a trick to ensure our value of theta is always positive. We perform our search over <span class="math inline">\(\log(\theta)\)</span> then exponentiate before plugging it into the solver. This transforms our constrained optimization problem into a unconstrained optimization problem in <span class="math inline">\(\log\)</span> space. This is because plugging any real number into <span class="math inline">\(e^\theta\)</span> will yield a positive number, and because <span class="math inline">\(e^\theta\)</span> is continuous with continuous derivatives we can compute gradients for any value of <span class="math inline">\(\theta\)</span>.</p>
+<div id="11b66099" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>grad_LL <span class="op">=</span> jax.grad(log_likelihood)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(grad_LL(jnp.array([jnp.log(<span class="fl">0.3</span>),jnp.log(<span class="fl">0.1</span>)])))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[16.944235   4.2417445]</code></pre>
+</div>
+</div>
+<p>Exercise 1:</p>
+<p>Implement gradient ascent to find the maximum of the log_likelihood function. This will be 4-5 lines of code inside a loop.</p>
+<p>Exercise 2:</p>
+<p>Extend the code to SIHR model and try to estimate the parameters using the same gradient ascent setup as above.</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
