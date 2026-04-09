@@ -8,3 +8,12 @@ title: "Website Test"
 
 This is a test site to test the viability of using quarto.
 
+## Introductory Pathway 
+Workshop schedule 2026
+
+## Intermediate Pathway
+Workshop schedule 2026
+
+## Advanced Pathway
+Workshop schedule 2026
+### Project 1
