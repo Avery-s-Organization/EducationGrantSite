@@ -6,7 +6,9 @@ title: "Learning Parameters of Dynamical Systems"
 
 ### 1. [Intro to SIR models and Euler's Method](example_SIR.ipynb)
 
-### 2. [Intro to MCMC and Inference for State Space Models](MCMC.ipynb)
+### 2. [Intro to Markov Chains](markov_chains.ipynb)
+
+### 3. [Intro to MCMC and Inference for State Space Models](MCMC.ipynb)
 
 # R Examples
 
